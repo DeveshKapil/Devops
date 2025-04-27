@@ -12,7 +12,7 @@ pipeline {
             steps {
                 sh '''
                     python3 -m venv myenv
-                    source myenv/bin/activate
+                    . myenv/bin/activate
                     pip install -r requirements.txt || true
                     pip install selenium pytest pytest-html
                 '''

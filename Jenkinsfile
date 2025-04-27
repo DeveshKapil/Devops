@@ -1,6 +1,12 @@
 pipeline {
     agent any
 
+    environment {
+        REPORT_DIR = 'reports'
+        REPORT_FILE = 'report.html'
+        RECIPIENTS = '9012521291khajan@gmail.com'
+    }
+
     stages {
         stage('Checkout') {
             steps {
@@ -18,15 +24,15 @@ pipeline {
                 '''
             }
         }
+
         stage('Run Tests') {
             steps {
                 sh '''
                     . myenv/bin/activate
-                    pytest --html=reports/report.html
+                    pytest --html=${REPORT_DIR}/${REPORT_FILE}
                 '''
             }
         }
-
 
         stage('Publish Report') {
             steps {
@@ -34,8 +40,8 @@ pipeline {
                     allowMissing: false,
                     alwaysLinkToLastBuild: true,
                     keepAll: true,
-                    reportDir: 'reports',
-                    reportFiles: 'report.html',
+                    reportDir: "${REPORT_DIR}",
+                    reportFiles: "${REPORT_FILE}",
                     reportName: "Python Selenium Test Report"
                 ])
             }
@@ -45,9 +51,14 @@ pipeline {
     post {
         always {
             emailext (
-                to: '9012521291khajan@gmail.com',
-                subject: "Python Selenium Test Execution Report",
-                body: "The Selenium tests have finished. View the report: ${BUILD_URL}Python_Selenium_Test_Report/",
+                to: "${RECIPIENTS}",
+                subject: "Python Selenium Test Execution Report: ${currentBuild.fullDisplayName}",
+                body: """
+                    The Selenium tests have finished. You can view the detailed test report at:
+                    ${BUILD_URL}htmlreports/${REPORT_FILE}
+                    
+                    For full build logs, see the attached log.
+                """,
                 attachLog: true
             )
         }

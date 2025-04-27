@@ -10,11 +10,14 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                sh 'pip3 install -r requirements.txt || true'
-                sh 'pip3 install selenium pytest pytest-html'
+                sh '''
+                    python3 -m venv myenv
+                    source myenv/bin/activate
+                    pip install -r requirements.txt || true
+                    pip install selenium pytest pytest-html
+                '''
             }
         }
-
         stage('Run Tests') {
             steps {
                 sh 'pytest --html=reports/report.html'

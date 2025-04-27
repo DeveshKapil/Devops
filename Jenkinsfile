@@ -20,10 +20,13 @@ pipeline {
         }
         stage('Run Tests') {
             steps {
-                . myenv/bin/activate
-                sh 'pytest --html=reports/report.html'
+                sh '''
+                    . myenv/bin/activate
+                    pytest --html=reports/report.html
+                '''
             }
         }
+
 
         stage('Publish Report') {
             steps {

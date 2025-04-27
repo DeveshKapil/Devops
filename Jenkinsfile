@@ -20,6 +20,7 @@ pipeline {
         }
         stage('Run Tests') {
             steps {
+                . myenv/bin/activate
                 sh 'pytest --html=reports/report.html'
             }
         }

@@ -45,13 +45,6 @@ pipeline {
                     reportName: "Python Selenium Test Report"
                 ])
             }
-            steps {
-                script {
-                    echo "Current Build URL: ${env.BUILD_URL}"
-                    echo "Recipient list: ${RECIPIENTS}"
-    }
-}
-
         }
     }
 
